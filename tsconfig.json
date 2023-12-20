@@ -1,0 +1,25 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "noEmit": true,
+    "strict": true,
+    "rootDir": ".",
+    "declaration": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "target": "es2022",
+    "module": "CommonJS",
+    "lib": [
+      "es2022",
+    ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "strictPropertyInitialization": false,
+    "strictNullChecks": true,
+    "baseUrl": ".",
+  },
+  "include": [
+    "./src/**/*",
+  ],
+}
