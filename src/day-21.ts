@@ -24,11 +24,6 @@ type NewGame = {
   state: '❌';
 };
 
-type TState = {
-  board: TicTactToeBoard;
-  state: TicTacToeState;
-};
-
 type UpdateRow<
   T extends unknown[],
   X extends number,
@@ -141,29 +136,33 @@ type Winner<Board extends TicTactToeBoard> = HasEmptyCell<Board> extends false
     ? '❌ Won'
     : Some<WinnerCombination, ChipPositions<Board, '⭕'>> extends true
       ? '⭕ Won'
-      : TState;
+      : TicTacToeGame;
 
 type NextState<
-  State extends TState,
+  State extends TicTacToeGame,
   Board extends TicTactToeBoard,
-> = Winner<Board> extends TicTacToeEndState
-  ? Winner<Board>
+> = Winner<Board> extends infer _Winner extends TicTacToeEndState
+  ? _Winner
   : State['state'] extends '❌'
     ? '⭕'
     : '❌';
 
-type TicTacToe<
-  State extends TState,
+type MakeTurn<
+  Game extends TicTacToeGame,
   Move extends TicTacToePositions,
-> = UpdatedBoard<State['board'], Move, State['state']> extends never
-  ? State
-  : {
-      board: UpdatedBoard<State['board'], Move, State['state']>;
-      state: NextState<
-        State,
-        UpdatedBoard<State['board'], Move, State['state']>
-      >;
-    };
+> = UpdatedBoard<Game['board'], Move, Game['state']> extends infer _Board
+  ? {
+      board: UpdatedBoard<Game['board'], Move, Game['state']>;
+      state: NextState<Game, UpdatedBoard<Game['board'], Move, Game['state']>>;
+    }
+  : Game;
+
+type TicTacToe<
+  Game extends TicTacToeGame,
+  Move extends TicTacToePositions,
+> = UpdatedBoard<Game['board'], Move, Game['state']> extends never
+  ? Game
+  : MakeTurn<Game, Move>;
 
 /**
  * TESTS
